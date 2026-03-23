@@ -1,0 +1,37 @@
+name: Daily Holdings Tracker
+
+on:
+  schedule:
+    # 9:30 AM Eastern = 14:30 UTC (adjust for DST as needed)
+    - cron: "30 14 * * 1-5"
+  workflow_dispatch:   # lets you trigger manually from the Actions tab
+
+jobs:
+  fetch-and-diff:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # needed to commit data files back to the repo
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests pandas openpyxl pandas-market-calendars
+
+      - name: Run holdings script
+        run: python scripts/fetch_holdings.py
+
+      - name: Commit updated data
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/
+          git diff --staged --quiet || git commit -m "Holdings update $(date -u +%Y-%m-%d)"
+          git pull --rebase
+          git push
