@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CGDV · Daily Holdings Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:        #0b0e14;
+      --surface:   #111520;
+      --border:    #1e2535;
+      --text:      #c8d0e0;
+      --muted:     #4a5568;
+      --accent:    #3b82f6;
+      --green:     #22c55e;
+      --green-bg:  rgba(34,197,94,0.08);
+      --red:       #ef4444;
+      --red-bg:    rgba(239,68,68,0.08);
+      --yellow:    #f59e0b;
+      --yellow-bg: rgba(245,158,11,0.07);
+      --mono:      'IBM Plex Mono', monospace;
+      --sans:      'IBM Plex Sans', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 36px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .logo {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+    .logo-ticker {
+      font-family: var(--mono);
+      font-size: 22px;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: 0.06em;
+    }
+    .logo-name {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 300;
+      letter-spacing: 0.04em;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .date-badge {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .refresh-btn {
+      padding: 7px 16px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: border-color .2s, color .2s;
+    }
+    .refresh-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    main { padding: 28px 36px; max-width: 1400px; margin: 0 auto; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    .stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 18px 20px;
+    }
+    .stat-label {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .stat-value {
+      font-family: var(--mono);
+      font-size: 28px;
+      font-weight: 600;
+      color: #fff;
+      line-height: 1;
+    }
+    .stat-value.green { color: var(--green); }
+    .stat-value.red   { color: var(--red);   }
+    .stat-value.yellow{ color: var(--yellow); }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+    .filter-group {
+      display: flex;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .filter-btn {
+      padding: 7px 16px;
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: background .15s, color .15s;
+      border-right: 1px solid var(--border);
+    }
+    .filter-btn:last-child { border-right: none; }
+    .filter-btn.active { background: var(--accent); color: #fff; }
+    .filter-btn:not(.active):hover { background: var(--border); color: var(--text); }
+
+    .search-input {
+      padding: 7px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 12px;
+      width: 180px;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .search-input::placeholder { color: var(--muted); }
+    .search-input:focus { border-color: var(--accent); }
+
+    .sort-select {
+      padding: 7px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 11px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .diff-info {
+      margin-left: auto;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .table-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    thead th {
+      padding: 12px 16px;
+      text-align: left;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+      background: var(--surface);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    thead th:hover { color: var(--text); }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background .1s;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(59,130,246,0.04); }
+    tbody tr.row-added   { background: var(--green-bg); }
+    tbody tr.row-removed { background: var(--red-bg); }
+    tbody tr.row-changed { background: var(--yellow-bg); }
+
+    td {
+      padding: 11px 16px;
+      font-family: var(--mono);
+      white-space: nowrap;
+    }
+    td.ticker-cell {
+      font-weight: 600;
+      font-size: 14px;
+      color: #fff;
+    }
+    td.status-cell {
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 3px;
+      font-weight: 500;
+    }
+    .badge-added     { background: var(--green-bg);  color: var(--green);  border: 1px solid rgba(34,197,94,0.2); }
+    .badge-removed   { background: var(--red-bg);    color: var(--red);    border: 1px solid rgba(239,68,68,0.2); }
+    .badge-changed   { background: var(--yellow-bg); color: var(--yellow); border: 1px solid rgba(245,158,11,0.2); }
+    .badge-unchanged { background: transparent;      color: var(--muted);  border: 1px solid var(--border); }
+
+    td.num { text-align: right; }
+    .chg-pos { color: var(--green); }
+    .chg-neg { color: var(--red);   }
+    .chg-zero{ color: var(--muted); }
+    .na      { color: var(--muted); font-size: 11px; }
+
+    .state-msg {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 13px;
+    }
+    .state-msg .spinner {
+      display: inline-block;
+      width: 20px; height: 20px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      margin-bottom: 14px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .bar-wrap { display: flex; align-items: center; gap: 8px; }
+    .mini-bar {
+      display: inline-block;
+      height: 10px;
+      min-width: 2px;
+      border-radius: 2px;
+      vertical-align: middle;
+    }
+
+    @media (max-width: 900px) {
+      header { padding: 16px 18px; }
+      main   { padding: 18px; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span class="logo-ticker">CGDV</span>
+    <span class="logo-name">Capital Group Dividend Value ETF · Holdings Tracker</span>
+  </div>
+  <div class="header-right">
+    <span class="date-badge" id="headerDate">—</span>
+    <button class="refresh-btn" onclick="loadData()">↻ REFRESH</button>
+  </div>
+</header>
+
+<main>
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-label">Total Holdings</div>
+      <div class="stat-value" id="statTotal">—</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Changed</div>
+      <div class="stat-value yellow" id="statChanged">—</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Added</div>
+      <div class="stat-value green" id="statAdded">—</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Removed</div>
+      <div class="stat-value red" id="statRemoved">—</div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="filter-group">
+      <button class="filter-btn active" data-filter="all"       onclick="setFilter('all',this)">ALL</button>
+      <button class="filter-btn"        data-filter="changed"   onclick="setFilter('changed',this)">CHANGED</button>
+      <button class="filter-btn"        data-filter="added"     onclick="setFilter('added',this)">ADDED</button>
+      <button class="filter-btn"        data-filter="removed"   onclick="setFilter('removed',this)">REMOVED</button>
+      <button class="filter-btn"        data-filter="unchanged" onclick="setFilter('unchanged',this)">UNCHANGED</button>
+    </div>
+    <input class="search-input" id="searchInput" placeholder="Search ticker…" oninput="renderTable()" />
+    <select class="sort-select" id="sortSelect" onchange="renderTable()">
+      <option value="ticker_asc">Ticker A→Z</option>
+      <option value="ticker_desc">Ticker Z→A</option>
+      <option value="shares_chg_desc">Shares Δ% High→Low</option>
+      <option value="shares_chg_asc">Shares Δ% Low→High</option>
+      <option value="weight_desc">Weight Today High→Low</option>
+      <option value="status">Status</option>
+    </select>
+    <span class="diff-info" id="diffInfo"></span>
+  </div>
+
+  <div class="table-wrap" id="tableWrap">
+    <div class="state-msg">
+      <div class="spinner"></div><br>Loading holdings data…
+    </div>
+  </div>
+</main>
+
+<script>
+  let allRows = [];
+  let activeFilter = 'all';
+
+  async function loadData() {
+    document.getElementById('tableWrap').innerHTML =
+      '<div class="state-msg"><div class="spinner"></div><br>Loading holdings data...</div>';
+
+    try {
+      const bust = '?t=' + Date.now();
+      const res  = await fetch('data/diff.json' + bust);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+
+      document.getElementById('headerDate').textContent = data.date || '--';
+
+      if (!data.diff || data.diff.length === 0) {
+        document.getElementById('tableWrap').innerHTML =
+          '<div class="state-msg">No diff data available yet. Check back after the first automated run.</div>';
+        return;
+      }
+
+      allRows = data.diff;
+      updateStats();
+      renderTable();
+
+      const priorLabel = data.prior_date
+        ? 'comparing ' + data.date + ' vs ' + data.prior_date
+        : 'no prior date to compare';
+      document.getElementById('diffInfo').textContent = priorLabel;
+
+    } catch (err) {
+      document.getElementById('tableWrap').innerHTML =
+        '<div class="state-msg">Could not load data/diff.json<br><small>' + err.message + '</small></div>';
+    }
+  }
+
+  function updateStats() {
+    const counts = { changed: 0, added: 0, removed: 0, unchanged: 0 };
+    allRows.forEach(function(r) { counts[r.status] = (counts[r.status] || 0) + 1; });
+    document.getElementById('statTotal').textContent   = allRows.length;
+    document.getElementById('statChanged').textContent = counts.changed;
+    document.getElementById('statAdded').textContent   = counts.added;
+    document.getElementById('statRemoved').textContent = counts.removed;
+  }
+
+  function setFilter(f, btn) {
+    activeFilter = f;
+    document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    renderTable();
+  }
+
+  function getSortedFiltered() {
+    const query = document.getElementById('searchInput').value.trim().toUpperCase();
+    const sort  = document.getElementById('sortSelect').value;
+
+    let rows = allRows.filter(function(r) {
+      if (activeFilter !== 'all' && r.status !== activeFilter) return false;
+      if (query && r.ticker.toUpperCase().indexOf(query) === -1) return false;
+      return true;
+    });
+
+    const statusOrder = { added: 0, removed: 1, changed: 2, unchanged: 3 };
+    rows.sort(function(a, b) {
+      switch (sort) {
+        case 'ticker_asc':      return a.ticker.localeCompare(b.ticker);
+        case 'ticker_desc':     return b.ticker.localeCompare(a.ticker);
+        case 'shares_chg_desc': return (b.shares_pct_change != null ? b.shares_pct_change : -Infinity) - (a.shares_pct_change != null ? a.shares_pct_change : -Infinity);
+        case 'shares_chg_asc':  return (a.shares_pct_change != null ? a.shares_pct_change : Infinity)  - (b.shares_pct_change != null ? b.shares_pct_change : Infinity);
+        case 'weight_desc':     return (b.pct_net_assets_today || 0) - (a.pct_net_assets_today || 0);
+        case 'status':          return (statusOrder[a.status] || 9) - (statusOrder[b.status] || 9);
+        default: return 0;
+      }
+    });
+    return rows;
+  }
+
+  function fmtShares(v) {
+    if (v == null) return '<span class="na">--</span>';
+    if (v >= 1000000) return (v / 1000000).toFixed(3) + 'M';
+    if (v >= 1000)    return (v / 1000).toFixed(2) + 'K';
+    return v.toFixed(0);
+  }
+
+  function fmtPct(v) {
+    if (v == null) return '<span class="na">--</span>';
+    return v.toFixed(4) + '%';
+  }
+
+  function fmtChange(v, isPercent) {
+    if (v == null) return '<span class="na">--</span>';
+    const cls  = v > 0 ? 'chg-pos' : v < 0 ? 'chg-neg' : 'chg-zero';
+    const sign = v > 0 ? '+' : '';
+    const text = isPercent ? sign + v.toFixed(4) + 'pp' : sign + v.toFixed(2) + '%';
+    const barMax   = isPercent ? 2 : 20;
+    const barW     = Math.min(Math.abs(v) / barMax * 40, 40);
+    const barColor = v > 0 ? 'var(--green)' : v < 0 ? 'var(--red)' : 'var(--muted)';
+    return '<div class="bar-wrap"><span class="' + cls + '">' + text + '</span><span class="mini-bar" style="width:' + barW + 'px;background:' + barColor + ';opacity:0.5;"></span></div>';
+  }
+
+  function badgeHtml(status) {
+    const labels = { added: '+ ADDED', removed: '- REMOVED', changed: '~ CHANGED', unchanged: '. same' };
+    return '<span class="badge badge-' + status + '">' + (labels[status] || status) + '</span>';
+  }
+
+  function renderTable() {
+    const rows = getSortedFiltered();
+    if (rows.length === 0) {
+      document.getElementById('tableWrap').innerHTML =
+        '<div class="state-msg">No holdings match the current filter.</div>';
+      return;
+    }
+
+    let tbody = '';
+    rows.forEach(function(r) {
+      tbody += '<tr class="row-' + r.status + '">';
+      tbody += '<td class="ticker-cell">' + r.ticker + '</td>';
+      tbody += '<td class="status-cell">' + badgeHtml(r.status) + '</td>';
+      tbody += '<td class="num">' + fmtShares(r.shares_prior) + '</td>';
+      tbody += '<td class="num">' + fmtShares(r.shares_today) + '</td>';
+      tbody += '<td class="num">' + fmtChange(r.shares_pct_change, false) + '</td>';
+      tbody += '<td class="num">' + fmtPct(r.pct_net_assets_prior) + '</td>';
+      tbody += '<td class="num">' + fmtPct(r.pct_net_assets_today) + '</td>';
+      tbody += '<td class="num">' + fmtChange(r.pct_net_assets_change, true) + '</td>';
+      tbody += '</tr>';
+    });
+
+    document.getElementById('tableWrap').innerHTML =
+      '<table><thead><tr>' +
+      '<th>Ticker</th><th>Status</th>' +
+      '<th class="num">Shares (Prior)</th><th class="num">Shares (Today)</th><th class="num">Shares Delta%</th>' +
+      '<th class="num">Weight (Prior)</th><th class="num">Weight (Today)</th><th class="num">Weight Delta pp</th>' +
+      '</tr></thead><tbody>' + tbody + '</tbody></table>';
+  }
+
+  loadData();
+</script>
+</body>
+</html>
