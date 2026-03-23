@@ -1,0 +1,270 @@
+{
+  "date": "2026-03-23",
+  "holdings": [
+    {
+      "ticker": "MSFT",
+      "pct_net_assets": 0.056,
+      "shares": 4231925.0
+    },
+    {
+      "ticker": "NVDA",
+      "pct_net_assets": 0.0511,
+      "shares": 8534158.0
+    },
+    {
+      "ticker": "AVGO",
+      "pct_net_assets": 0.0447,
+      "shares": 4163534.0
+    },
+    {
+      "ticker": "AMAT",
+      "pct_net_assets": 0.0419,
+      "shares": 3386711.0
+    },
+    {
+      "ticker": "RTX",
+      "pct_net_assets": 0.0368,
+      "shares": 5352786.0
+    },
+    {
+      "ticker": "CARR",
+      "pct_net_assets": 0.0354,
+      "shares": 17579507.0
+    },
+    {
+      "ticker": "GE",
+      "pct_net_assets": 0.0308,
+      "shares": 3096025.0
+    },
+    {
+      "ticker": "LLY",
+      "pct_net_assets": 0.0307,
+      "shares": 976771.0
+    },
+    {
+      "ticker": "BATS",
+      "pct_net_assets": 0.0306,
+      "shares": 15356396.0
+    },
+    {
+      "ticker": "META",
+      "pct_net_assets": 0.0291,
+      "shares": 1414374.0
+    },
+    {
+      "ticker": "RCL",
+      "pct_net_assets": 0.0256,
+      "shares": 2795607.0
+    },
+    {
+      "ticker": "HAL",
+      "pct_net_assets": 0.0239,
+      "shares": 18884545.0
+    },
+    {
+      "ticker": "SBUX",
+      "pct_net_assets": 0.0235,
+      "shares": 7323689.0
+    },
+    {
+      "ticker": "AAPL",
+      "pct_net_assets": 0.022,
+      "shares": 2562435.0
+    },
+    {
+      "ticker": "LIN",
+      "pct_net_assets": 0.0216,
+      "shares": 1278013.0
+    },
+    {
+      "ticker": "MDT",
+      "pct_net_assets": 0.0215,
+      "shares": 7186356.0
+    },
+    {
+      "ticker": "UNP",
+      "pct_net_assets": 0.0213,
+      "shares": 2613870.0
+    },
+    {
+      "ticker": "CMQXX",
+      "pct_net_assets": 0.0209,
+      "shares": 6025795.42
+    },
+    {
+      "ticker": "JPM",
+      "pct_net_assets": 0.0207,
+      "shares": 2084766.0
+    },
+    {
+      "ticker": "UNH",
+      "pct_net_assets": 0.0204,
+      "shares": 2131415.0
+    },
+    {
+      "ticker": "IP",
+      "pct_net_assets": 0.02,
+      "shares": 17084930.0
+    },
+    {
+      "ticker": "TSM",
+      "pct_net_assets": 0.0198,
+      "shares": 1734661.0
+    },
+    {
+      "ticker": "CSCO",
+      "pct_net_assets": 0.0193,
+      "shares": 7166305.0
+    },
+    {
+      "ticker": "PM",
+      "pct_net_assets": 0.0174,
+      "shares": 3078209.0
+    },
+    {
+      "ticker": "AMZN",
+      "pct_net_assets": 0.0163,
+      "shares": 2285632.0
+    },
+    {
+      "ticker": "CNQ",
+      "pct_net_assets": 0.0159,
+      "shares": 9337510.0
+    },
+    {
+      "ticker": "CMCSA",
+      "pct_net_assets": 0.0153,
+      "shares": 15211074.0
+    },
+    {
+      "ticker": "MA",
+      "pct_net_assets": 0.015,
+      "shares": 868751.0
+    },
+    {
+      "ticker": "ABBV",
+      "pct_net_assets": 0.0147,
+      "shares": 2065219.0
+    },
+    {
+      "ticker": "VRTX",
+      "pct_net_assets": 0.0142,
+      "shares": 902506.0
+    },
+    {
+      "ticker": "TRP",
+      "pct_net_assets": 0.0127,
+      "shares": 5770143.0
+    },
+    {
+      "ticker": "EXE",
+      "pct_net_assets": 0.0124,
+      "shares": 3329828.0
+    },
+    {
+      "ticker": "CRM",
+      "pct_net_assets": 0.0124,
+      "shares": 1823851.0
+    },
+    {
+      "ticker": "GOOGL",
+      "pct_net_assets": 0.0119,
+      "shares": 1141262.0
+    },
+    {
+      "ticker": "MCD",
+      "pct_net_assets": 0.0118,
+      "shares": 1099266.0
+    },
+    {
+      "ticker": "NEE",
+      "pct_net_assets": 0.0112,
+      "shares": 3619059.0
+    },
+    {
+      "ticker": "AIG",
+      "pct_net_assets": 0.0109,
+      "shares": 4212381.0
+    },
+    {
+      "ticker": "PLD",
+      "pct_net_assets": 0.0105,
+      "shares": 2370531.0
+    },
+    {
+      "ticker": "ITW",
+      "pct_net_assets": 0.0097,
+      "shares": 1086249.0
+    },
+    {
+      "ticker": "GD",
+      "pct_net_assets": 0.0095,
+      "shares": 793403.0
+    },
+    {
+      "ticker": "ORCL",
+      "pct_net_assets": 0.0095,
+      "shares": 1827339.0
+    },
+    {
+      "ticker": "AMGN",
+      "pct_net_assets": 0.0094,
+      "shares": 781270.0
+    },
+    {
+      "ticker": "ABT",
+      "pct_net_assets": 0.0092,
+      "shares": 2523801.0
+    },
+    {
+      "ticker": "TXN",
+      "pct_net_assets": 0.0091,
+      "shares": 1404017.0
+    },
+    {
+      "ticker": "BLD",
+      "pct_net_assets": 0.009,
+      "shares": 771187.0
+    },
+    {
+      "ticker": "DTE",
+      "pct_net_assets": 0.0089,
+      "shares": 1803821.0
+    },
+    {
+      "ticker": "GEHC",
+      "pct_net_assets": 0.0089,
+      "shares": 3692704.0
+    },
+    {
+      "ticker": "APD",
+      "pct_net_assets": 0.0085,
+      "shares": 875186.0
+    },
+    {
+      "ticker": "MDLZ",
+      "pct_net_assets": 0.0082,
+      "shares": 4224896.0
+    },
+    {
+      "ticker": "UBER",
+      "pct_net_assets": 0.0078,
+      "shares": 3060146.0
+    },
+    {
+      "ticker": "PEG",
+      "pct_net_assets": 0.0075,
+      "shares": 2715856.0
+    },
+    {
+      "ticker": "COF",
+      "pct_net_assets": 0.0072,
+      "shares": 1145106.0
+    },
+    {
+      "ticker": "INTC",
+      "pct_net_assets": 0.0062,
+      "shares": 4107698.0
+    }
+  ]
+}
